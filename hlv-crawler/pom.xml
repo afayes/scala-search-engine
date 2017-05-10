@@ -17,7 +17,7 @@
     <description>Retrieve web pages</description>
 
     <properties>
-        <start-class>com.ixxus.hastalavista.search.SearchApplication</start-class>
+        <start-class>com.ixxus.hastalavista.crawler.SearchApplication</start-class>
     </properties>
 
   <dependencies>

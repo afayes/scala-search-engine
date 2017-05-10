@@ -1,4 +1,4 @@
-package com.ixxus.hastalavista.search
+package com.ixxus.hastalavista.crawler
 
 import javax.annotation.PostConstruct
 

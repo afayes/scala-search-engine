@@ -1,4 +1,4 @@
-package com.ixxus.hastalavista.search
+package com.ixxus.hastalavista.crawler
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -7,12 +7,12 @@ import org.springframework.context.annotation.{ComponentScan, Configuration}
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
-class SearchApplication
+class CrawlerApplication
 
-object SearchApplication  {
+object CrawlerApplication  {
 
     def main(args: Array[String]): Unit = {
-        SpringApplication.run(classOf[SearchApplication])
+        SpringApplication.run(classOf[CrawlerApplication])
     }
 
 }
