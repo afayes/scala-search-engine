@@ -1,7 +1,7 @@
 package com.ixxus.hastalavista.search.controller
 
 import com.ixxus.hastalavista.search.model._
-import com.ixxus.hastalavista.search.service.ApplicationService
+import com.ixxus.hastalavista.search.service.{ApplicationService, ApplicationServiceImpl}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation._
 
@@ -13,8 +13,7 @@ import scala.collection.JavaConverters._
 @RequestMapping(Array("/search"))
 class SearchController {
 
-  @Autowired
-  private val applicationService: ApplicationService = null
+  private val applicationService = new ApplicationServiceImpl
 
   @RequestMapping(value = Array("/index"), method=Array(RequestMethod.POST))
   @ResponseBody

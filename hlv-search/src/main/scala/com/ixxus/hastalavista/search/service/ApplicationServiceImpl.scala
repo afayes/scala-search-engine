@@ -1,23 +1,18 @@
 package com.ixxus.hastalavista.search.service
 
 import com.ixxus.hastalavista.search.model.{CommandItem, _}
-import com.ixxus.hastalavista.search.repository.Repository
+import com.ixxus.hastalavista.search.repository.{AnalyticRepository, PageRepository, Repository}
 import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
 import org.springframework.stereotype.Service
 
 /**
   * todo add comments.
   */
-@Service
 class ApplicationServiceImpl extends ApplicationService {
 
-  @Autowired
-  @Qualifier("pageRepository")
-  private val pageRepository:Repository[PageKey, PageCommandItem, PageQueryItem] = null
+  private val pageRepository = new PageRepository
 
-  @Autowired
-  @Qualifier("analyticRepository")
-  private val analyticRepository:Repository[AnalyticKey, CommandItem, AnalyticQueryItem] = null;
+  private val analyticRepository = new AnalyticRepository
 
   override def save(item: CommandItem): Unit = item match {
     case p:PageCommandItem => pageRepository.save(p)

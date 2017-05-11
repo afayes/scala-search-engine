@@ -7,7 +7,6 @@ import org.springframework.stereotype
 /**
   * todo add comments.
   */
-@stereotype.Repository("analyticRepository")
 class AnalyticRepository extends Repository [AnalyticKey, CommandItem,  AnalyticQueryItem]{
 
   override def save(item: CommandItem): Unit = ???
