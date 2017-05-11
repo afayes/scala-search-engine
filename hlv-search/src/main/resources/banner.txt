@@ -1,0 +1,20 @@
+  .--.
+ :yyyy:
+ :yyyy/
+  .::. `....`  `               ..```            ```.`  .....            ....`      ``...........`
+ .yyyy.  -::::--`      `.-:::::+++++/:.      .:/++++/  oyyyo            yyyy/   ./osyyyyyyyyyyyy:
+ .yyyy.  .::::::::.  `-::::::::++++++++/.  -/+++++++/  oyyyo            yyyy/  :yyyyysssssssssss:
+ .yyyy.    ``.-::::-.::::-.``   ``.-/++++:/++++/-.``   oyyyo            yyyy/ `yyyy+`
+ .yyyy.         .::::::-`            `/++++++:`        oyyyo            yyyy/ `yyyy+`
+ .yyyy.          .:::::                /++++:          oyyyo            yyyy/  /yyyyyo/-.
+ .yyyy.           ::::.                .++++`          oyyyo            yyyy/   .+yyyyyyyyo/-`
+ .yyyy.           ::::.                `++++           oyyyo            yyyy/      .:+syyyyyyyo:
+ .yyyy.          `::::-                :++++-          +yyyo            yyyy:          `-/+yyyyys`
+ .yyyy.         `::::::-              -++++++.         :yyyy.          :yyyy.               :yyyy+
+ .yyyy.       `-::::-::::.`        `-/++++++++/-`       oyyys-       `/yyyy/                .yyyy+
+ .yyyy.  .--::::::-` .::::::--.://++++++:``:++++++/:-   `oyyyys+/::/osyyyy/   .++++++++++++oyyyyy.
+ .yyyy.  -:::::--`     .-::::::++++++/-`    `:/+++++/     -oyyyyyyyyyyyy+.    -yyyyyyyyyyyyyyys/`
+ `////`  `...``           `....::--.`          `.--:-       `-/+ooo++/-`      `//////////::-.``
+ ==================================================================================================
+               :: Hasta la vista :: Crawler (v1.0.0-SNAPSHOT)
+
