@@ -1,10 +1,14 @@
 package com.ixxus.hastalavista.crawler
 
+import java.net.URI
+import java.util
+import java.util.Date
 import javax.annotation.PostConstruct
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
 
 import scala.collection.mutable
 import scala.concurrent.Future
@@ -19,6 +23,8 @@ class CrawlerServiceImpl extends CrawlerService {
 
   private val logger = LoggerFactory.getLogger(classOf[CrawlerServiceImpl])
 
+  private val restTemplate = new RestTemplate
+
   private val enc = "ISO-8859-1"
 
   @Value("${crawler.baseUrl}")
@@ -26,6 +32,9 @@ class CrawlerServiceImpl extends CrawlerService {
 
   @Value("${crawler.maxPages}")
   private var maxPages: Int = _
+
+  @Value("${searchService.indexUrl}")
+  private var searchServiceIndexUrl:String = _
 
   private val linksPattern = "\\s*(?i)href\\s*=\\s*(\"([^\"]*\")|'[^']*'|([^'\">\\s]+))".r
 
@@ -70,7 +79,7 @@ class CrawlerServiceImpl extends CrawlerService {
   def indexPage(url: String, html: String):Unit = {
     Future {
       logger.debug("Indexing {}", url)
-      // todo call search service
+      restTemplate.postForEntity(new URI(searchServiceIndexUrl), Page(url, html, new Date()), null);
       logger.info("Indexed {}", url)
     }
   }

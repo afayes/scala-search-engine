@@ -2,8 +2,6 @@ package com.ixxus.hastalavista.search.service
 
 import com.ixxus.hastalavista.search.model.{CommandItem, _}
 import com.ixxus.hastalavista.search.repository.{AnalyticRepository, PageRepository, Repository}
-import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
-import org.springframework.stereotype.Service
 
 /**
   * todo add comments.
