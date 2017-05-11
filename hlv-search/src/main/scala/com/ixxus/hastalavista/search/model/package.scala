@@ -21,8 +21,26 @@ package object model {
   case class PageKey(url:String) extends KeyItem
   case class AnalyticKey(url:String) extends KeyItem
 
-  class Page(@BeanProperty val url: String, @BeanProperty val content:String, @BeanProperty val creationDate:Date) {
-    def this() = this(null, null, null)
+  class Page() {
+
+    @BeanProperty
+    var url: String = _
+
+    @BeanProperty
+    var content:String = _
+
+    @BeanProperty
+    var creationDate:Date = _
+  }
+
+  object Page {
+    def apply(url:String, content:String, creationDate:Date):Page = {
+      val page = new Page
+      page.url = url
+      page.content = content
+      page.creationDate = creationDate
+      page
+    }
   }
 
   object ItemTypes extends Enumeration {
