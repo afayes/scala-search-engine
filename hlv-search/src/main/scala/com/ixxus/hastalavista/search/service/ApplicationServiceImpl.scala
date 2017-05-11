@@ -27,7 +27,9 @@ class ApplicationServiceImpl extends ApplicationService {
 
   override def get(url: KeyItem): QueryItem = ???
 
-  override def getAll(): Seq[QueryItem] = ???
+  override def getAll(itemType: ItemTypes.Value): Seq[QueryItem] = itemType match {
+    case ItemTypes.Page => pageRepository.getAll()
+  }
 
   override def search(query: String): Seq[PageQueryItem] = ???
 }

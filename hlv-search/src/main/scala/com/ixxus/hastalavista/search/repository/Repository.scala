@@ -1,6 +1,6 @@
 package com.ixxus.hastalavista.search.repository
 
-import com.ixxus.hastalavista.search.model.{KeyItem, CommandItem, QueryItem}
+import com.ixxus.hastalavista.search.model.{CommandItem, ItemTypes, KeyItem, QueryItem}
 
 /**
   * todo add comments.

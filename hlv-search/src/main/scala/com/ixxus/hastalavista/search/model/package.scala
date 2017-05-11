@@ -2,6 +2,8 @@ package com.ixxus.hastalavista.search
 
 import java.util.Date
 
+import scala.beans.BeanProperty
+
 /**
   * todo add comments.
   */
@@ -19,7 +21,12 @@ package object model {
   case class PageKey(url:String) extends KeyItem
   case class AnalyticKey(url:String) extends KeyItem
 
-  class Page(val url: String, val content:String, val creationDate:Date) {
+  class Page(@BeanProperty val url: String, @BeanProperty val content:String, @BeanProperty val creationDate:Date) {
     def this() = this(null, null, null)
   }
+
+  object ItemTypes extends Enumeration {
+    val Page, Analytic = Value
+  }
+
 }
