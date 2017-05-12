@@ -33,6 +33,10 @@ package object model {
     var creationDate:Date = _
   }
 
+  object ItemTypes extends Enumeration {
+    val Page, Analytic = Value
+  }
+
   object Page {
     def apply(url:String, content:String, creationDate:Date):Page = {
       val page = new Page
@@ -43,8 +47,36 @@ package object model {
     }
   }
 
-  object ItemTypes extends Enumeration {
-    val Page, Analytic = Value
+  class SearchResultItem {
+
+    @BeanProperty
+    var url:String = _
+
+    @BeanProperty
+    var matchCount:Int = _
+
+    @BeanProperty
+    var matchDistance:Int = _
+
+    @BeanProperty
+    var lastRetrievalDate:Date = _
+
+    @BeanProperty
+    var creationDate:Date = _
+
+
+    override def toString = s"SearchResultItem($url, $matchCount, $matchDistance, $lastRetrievalDate, $creationDate)"
   }
 
+  object SearchResultItem {
+    def apply(url:String, matchCount:Int, mathDistance:Int, lastRetrievalDate:Date, creationDate:Date):SearchResultItem = {
+      val p = new SearchResultItem
+      p.url = url
+      p.matchCount = matchCount
+      p.matchDistance = mathDistance
+      p.lastRetrievalDate = lastRetrievalDate
+      p.creationDate = creationDate
+      p
+    }
+  }
 }

@@ -18,4 +18,11 @@ object temp extends App {
   println(pattern.findAllMatchIn(text).size)
 
   println(List(1, 2, "helo").slice(0, 100))
+
+  println(List(1, 5, 2, 5).sortWith((n1, n2) => {
+    if (n1 > n2) true
+    if (n1 < n2) false
+    n1 - n2 > 0
+  }).toSeq)
+
 }

@@ -1,7 +1,6 @@
 package com.ixxus.hastalavista.crawler
 
 import java.net.URI
-import java.util
 import java.util.Date
 import javax.annotation.PostConstruct
 
@@ -77,11 +76,9 @@ class CrawlerServiceImpl extends CrawlerService {
   }
 
   def indexPage(url: String, html: String):Unit = {
-    Future {
       logger.debug("Indexing {}", url)
       restTemplate.postForEntity(new URI(searchServiceIndexUrl), Page(url, html, new Date()), null);
       logger.info("Indexed {}", url)
-    }
   }
 
   def ignoreUrl(url: String): Boolean = {

@@ -31,8 +31,8 @@ class SearchController extends SharedRepositoryServiceProvider with SearchServic
 
   @RequestMapping(method=Array(RequestMethod.GET))
   @ResponseBody
-  def search(@RequestParam query:String):java.util.List[Page] = {
-    searchService.search(query).slice(0, maxSearchResults).map(queryItemToPage).asJava
+  def search(@RequestParam query:String):java.util.List[SearchResultItem] = {
+    searchService.search(query).slice(0, maxSearchResults).asJava
   }
 
   def queryItemToPage(q:QueryItem):Page = {

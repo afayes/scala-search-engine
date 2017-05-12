@@ -1,41 +1,56 @@
 package com.ixxus.hastalavista.search.service
 
 import java.util.Date
+import scala.concurrent.duration._
 
-import com.ixxus.hastalavista.search.model.{ItemTypes, PageQueryItem}
+import com.ixxus.hastalavista.search.model.{AnalyticRetrievalDateCommandItem, ItemTypes, PageQueryItem, SearchResultItem}
+
+import scala.concurrent.{Await, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * todo add comments.
   */
 class SearchServiceImpl extends SearchService with SharedRepositoryServiceProvider{
 
-  override def search(query: String): Seq[PageQueryItem] = {
-    search(query, (p1, p2) => {
-      val (p1MatchCount, p1MatchDistance) = getRelevancy(p1, query)
-      val (p2MatchCount, p2MatchDistance) = getRelevancy(p2, query)
+  override def search(query: String): Seq[SearchResultItem] = {
 
-      if (p1MatchCount > p2MatchCount) true
-      if (p1MatchCount < p2MatchCount) false
-      p1MatchDistance > p2MatchDistance
-    }, Option(p => {
-      val (matchCount, matchDistance) = getRelevancy(p, query)
-      matchCount > 0 || matchDistance < Int.MaxValue
-    }))
+    val searchResultsRetrievalFunc = (pages:Seq[PageQueryItem]) => {
+      val searchResultsFuture = Future.traverse(pages)(p => Future{
+        val (matchCount, matchDistance) = getRelevancy(p, query)
+        SearchResultItem(p.url, matchCount, matchDistance, null, null)
+      })
+
+      Await.result(searchResultsFuture, 10.seconds)
+
+      val searchResults = searchResultsFuture.value.get.get
+      val filtered =  searchResults.filter(s => s.matchCount > 0 || s.matchDistance < Int.MaxValue)
+      filtered
+    }
+
+    val sortFunc = (s1:SearchResultItem, s2:SearchResultItem) => {
+      if (s1.matchCount > s2.matchCount) true
+      else if (s1.matchCount < s2.matchCount) false
+      else s1.matchDistance > s2.matchDistance
+    }
+
+    search(searchResultsRetrievalFunc, sortFunc)
+  }
+
+  private def search(searchResultsRetrievalFunc:(Seq[PageQueryItem] => Seq[SearchResultItem]),
+                     sortFunc:(SearchResultItem, SearchResultItem) => Boolean): Seq[SearchResultItem] = {
+
+    val pages = repositoryService.getAll(ItemTypes.Page).asInstanceOf[Seq[PageQueryItem]]
+    val searchResults = searchResultsRetrievalFunc(pages);
+    val s2 = searchResults.toList.sortWith(sortFunc)
+    println("search results " + searchResults.slice(0, 10).toList)
+    println ("sorted " + s2.toList)
+    s2
   }
 
   override def searchRankedByLastRetrievalDate(query: String): Seq[PageQueryItem] = ???
 
   override def searchRankedCreationDate(query: String): Seq[PageQueryItem] = ???
-
-  private def search(query:String, sortFunction: (PageQueryItem, PageQueryItem) => Boolean, filter:Option[(PageQueryItem)=>Boolean] = None): Seq[PageQueryItem] = {
-    val pages = repositoryService.getAll(ItemTypes.Page).asInstanceOf[Seq[PageQueryItem]]
-    val pagesFiltered = filter match {
-      case Some(func) => pages.filter(func)
-      case None => pages
-    }
-
-    pagesFiltered.sortWith(sortFunction)
-  }
 
   private def getRelevancy(page:PageQueryItem, query:String):(Int, Int) = {
     val pattern = query.r
@@ -47,5 +62,16 @@ class SearchServiceImpl extends SearchService with SharedRepositoryServiceProvid
   private def getMatchDistance(query: String, content: String):Int = {
     // todo implelment
     Int.MaxValue
+  }
+
+  private def updateLastRetrievalDateAnalytics(pagesSorted: Seq[PageQueryItem]):Unit = {
+    Future {
+      val currentDate = new Date()
+      pagesSorted.foreach(p =>
+        Future{
+          repositoryService.save(AnalyticRetrievalDateCommandItem(p.url, currentDate))
+        }
+      )
+    }
   }
 }
