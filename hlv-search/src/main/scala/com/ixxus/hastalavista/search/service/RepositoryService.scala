@@ -9,6 +9,6 @@ import com.ixxus.hastalavista.search.repository.Repository
 trait RepositoryService {
 
   def save(item:CommandItem)
-  def get(url:KeyItem):QueryItem
+  def get(key:KeyItem):Option[QueryItem]
   def getAll(itemType: ItemTypes.Value):Seq[QueryItem]
 }

@@ -8,6 +8,6 @@ import com.ixxus.hastalavista.search.model.{PageQueryItem, SearchResultItem}
 trait SearchService {
 
   def search(query:String):Seq[SearchResultItem]
-  def searchRankedByLastRetrievalDate(query:String):Seq[PageQueryItem]
-  def searchRankedCreationDate(query:String):Seq[PageQueryItem]
+  def getPagesByLastRetrievalDate():Seq[SearchResultItem]
+  def getPagesCreationDate(query:String):Seq[SearchResultItem]
 }

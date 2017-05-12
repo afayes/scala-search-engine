@@ -19,7 +19,7 @@ class PageRepository extends Repository[PageKey, PageCommandItem, PageQueryItem]
     logger.info(s"Added ${item.url} to index")
   }
 
-  override def get(url: PageKey): PageQueryItem = ???
+  override def get(key: PageKey): Option[PageQueryItem] = ???
 
   override def getAll(): Seq[PageQueryItem] = {
     data.values.toSeq

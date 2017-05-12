@@ -29,7 +29,9 @@ class AnalyticRepository extends Repository [AnalyticKey, CommandItem,  Analytic
   }
 
 
-  override def get(url: AnalyticKey): AnalyticQueryItem = ???
+  override def get(key: AnalyticKey): Option[AnalyticQueryItem] = {
+    data.get(key.url)
+  }
 
   override def getAll(): Seq[AnalyticQueryItem] = ???
 }

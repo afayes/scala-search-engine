@@ -1,9 +1,9 @@
 package com.ixxus.hastalavista.search.service
 
 import java.util.Date
-import scala.concurrent.duration._
 
-import com.ixxus.hastalavista.search.model.{AnalyticRetrievalDateCommandItem, ItemTypes, PageQueryItem, SearchResultItem}
+import scala.concurrent.duration._
+import com.ixxus.hastalavista.search.model._
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -42,15 +42,10 @@ class SearchServiceImpl extends SearchService with SharedRepositoryServiceProvid
 
     val pages = repositoryService.getAll(ItemTypes.Page).asInstanceOf[Seq[PageQueryItem]]
     val searchResults = searchResultsRetrievalFunc(pages);
-    val s2 = searchResults.toList.sortWith(sortFunc)
-    println("search results " + searchResults.slice(0, 10).toList)
-    println ("sorted " + s2.toList)
-    s2
+    searchResults.toList.sortWith(sortFunc)
   }
 
-  override def searchRankedByLastRetrievalDate(query: String): Seq[PageQueryItem] = ???
-
-  override def searchRankedCreationDate(query: String): Seq[PageQueryItem] = ???
+  override def getPagesCreationDate(query: String): Seq[SearchResultItem] = ???
 
   private def getRelevancy(page:PageQueryItem, query:String):(Int, Int) = {
     val pattern = query.r
@@ -64,14 +59,44 @@ class SearchServiceImpl extends SearchService with SharedRepositoryServiceProvid
     Int.MaxValue
   }
 
+  override def getPagesByLastRetrievalDate(): Seq[SearchResultItem] = {
+
+    // todo fix
+    // get analytic items directly
+    val searchResultsRetrievalFunc = (pages:Seq[PageQueryItem]) => {
+      val searchResultsFuture = Future.traverse(pages)(p => Future{
+        val lastRetrievalDate = getLastRetrievalDate(p)
+        SearchResultItem(p.url, 0, 0, lastRetrievalDate, null)
+      })
+
+      Await.result(searchResultsFuture, 10.seconds)
+
+      val searchResults = searchResultsFuture.value.get.get
+      val filtered =  searchResults.filter(s => s.lastRetrievalDate != null)
+      filtered
+    }
+
+    val sortFunc = (s1:SearchResultItem, s2:SearchResultItem) => {
+      s1.lastRetrievalDate.compareTo(s2.lastRetrievalDate) > 0
+    }
+
+    search(searchResultsRetrievalFunc, sortFunc)
+  }
+
   private def updateLastRetrievalDateAnalytics(pagesSorted: Seq[PageQueryItem]):Unit = {
-    Future {
       val currentDate = new Date()
       pagesSorted.foreach(p =>
         Future{
           repositoryService.save(AnalyticRetrievalDateCommandItem(p.url, currentDate))
         }
       )
+  }
+
+  def getLastRetrievalDate(page: PageQueryItem):Date = {
+    val analyticQueryItem = repositoryService.get(AnalyticKey(page.url)).asInstanceOf[Option[AnalyticQueryItem]]
+    analyticQueryItem match {
+      case Some(item) => item.retrievalDate
+      case None => null
     }
   }
 }

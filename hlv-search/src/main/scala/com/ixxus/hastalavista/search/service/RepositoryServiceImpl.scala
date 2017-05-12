@@ -20,7 +20,11 @@ class RepositoryServiceImpl extends RepositoryService {
     case a:AnalyticClickCommandItem => analyticRepository.save(a)
   }
 
-  override def get(url: KeyItem): QueryItem = ???
+  override def get(key: KeyItem): Option[QueryItem] = {
+    key match {
+      case k:AnalyticKey => analyticRepository.get(k)
+    }
+  }
 
   override def getAll(itemType: ItemTypes.Value): Seq[QueryItem] = itemType match {
     case ItemTypes.Page => pageRepository.getAll()

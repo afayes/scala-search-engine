@@ -35,6 +35,12 @@ class SearchController extends SharedRepositoryServiceProvider with SearchServic
     searchService.search(query).slice(0, maxSearchResults).asJava
   }
 
+  @RequestMapping(value = Array("/sort/lastRetrievalDate"), method=Array(RequestMethod.GET))
+  @ResponseBody
+  def getPagesByLastRetrievalDate():java.util.List[SearchResultItem] = {
+    searchService.getPagesByLastRetrievalDate().slice(0, maxSearchResults).asJava
+  }
+
   def queryItemToPage(q:QueryItem):Page = {
     val p = q.asInstanceOf[PageQueryItem]
     Page(p.url, p.content.substring(0, if (p.content.length < contentPreviewLength) p.content.length else contentPreviewLength), p.creationDate)

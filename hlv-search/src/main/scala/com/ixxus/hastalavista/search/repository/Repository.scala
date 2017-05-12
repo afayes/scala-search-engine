@@ -9,6 +9,6 @@ trait Repository[K <: KeyItem, C <:CommandItem, Q <: QueryItem] {
 
   def save(item:C):Unit = {
   }
-  def get(url:K):Q
+  def get(url:K):Option[Q]
   def getAll():Seq[Q]
 }
