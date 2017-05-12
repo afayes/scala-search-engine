@@ -17,4 +17,5 @@ object temp extends App {
   val text = "hello word1 word2 hello2 hellow word1 word1 word2"
   println(pattern.findAllMatchIn(text).size)
 
+  println(List(1, 2, "helo").slice(0, 100))
 }

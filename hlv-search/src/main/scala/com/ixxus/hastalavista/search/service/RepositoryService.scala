@@ -6,10 +6,9 @@ import com.ixxus.hastalavista.search.repository.Repository
 /**
   * todo add comments.
   */
-trait ApplicationService {
+trait RepositoryService {
 
   def save(item:CommandItem)
   def get(url:KeyItem):QueryItem
   def getAll(itemType: ItemTypes.Value):Seq[QueryItem]
-  def search(query:String):Seq[PageQueryItem]
 }

@@ -16,7 +16,7 @@ class PageRepository extends Repository[PageKey, PageCommandItem, PageQueryItem]
   override def save(item: PageCommandItem): Unit = {
     // todo manage concurrency
     data = data + (item.url -> PageQueryItem(item.url, item.content, item.creationDate))
-    logger.info(s"Added $item to index")
+    logger.info(s"Added ${item.url} to index")
   }
 
   override def get(url: PageKey): PageQueryItem = ???
