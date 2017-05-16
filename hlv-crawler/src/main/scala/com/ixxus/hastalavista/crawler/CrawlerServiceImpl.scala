@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate
 
 import scala.collection.mutable
 import scala.concurrent.Future
-import scala.io.Source
+import scala.io.{BufferedSource, Source}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
@@ -26,11 +26,11 @@ class CrawlerServiceImpl extends CrawlerService {
 
   private val enc = "ISO-8859-1"
 
-  @Value("${crawler.baseUrl}")
-  private var baseUrl: String = _
+  private val url = "https://en.wikipedia.org/wiki/Main_Page"
 
-  @Value("${crawler.maxPages}")
-  private var maxPages: Int = _
+  private var baseUrl: String = "https://en.wikipedia.org"
+
+  private var maxPages: Int = 200
 
   @Value("${searchService.indexUrl}")
   private var searchServiceIndexUrl:String = _
@@ -43,27 +43,32 @@ class CrawlerServiceImpl extends CrawlerService {
 
   @PostConstruct
   def crawl(): Unit = {
-    crawl(baseUrl, collection.mutable.Set[String]())
+    crawl(url, baseUrl, collection.mutable.Set[String]())
   }
 
-  private def crawl(url: String, urls: mutable.Set[String]): Unit = {
+  private def crawl(url: String, baseUrl:String, urls: mutable.Set[String], startTime:Long = System.nanoTime()): Unit = {
     Future {
       if (urls.size < maxPages && !urls.contains(url)) {
         logger.debug("crawling {} - currently crawled {} urls", url, urls.size)
         try {
           val source = Source.fromURL(url, enc)
           val html = source.mkString
-
           if (htmlPattern.findFirstIn(html) != None) {
-            urls.add(url)
-            indexPage(url, html)
+            synchronized(urls) {
+              if (urls.size < maxPages && !urls.contains(url)) {
+                urls.add(url)
+                indexPage(url, html)
+              }
+              ""
+            }
+
             linksPattern.findAllIn(html).matchData.foreach {
               linkFound => {
                 var link = linkFound.group(1).replace("\"", "")
                 link = if (link.charAt(0) == '/') baseUrl + link else link;
                 logger.debug("found url " + link)
                 if (!ignoreUrl(link) && link.contains(baseUrl) && !urls.contains(link)) {
-                  crawl(link, urls)
+                  crawl(link, baseUrl, urls, startTime)
                 }
               }
             }
@@ -71,6 +76,10 @@ class CrawlerServiceImpl extends CrawlerService {
         } catch {
           case e: Exception => logger.error("Error occurred", e)
         }
+      } else if(urls.size >= maxPages) {
+        val endTime:Long = System.nanoTime();
+        val duration:Double = (endTime - startTime)/1000000000.asInstanceOf[Double]
+        println(s"Crawled ${urls.size} urls in $duration seconds" )
       }
     }
   }
