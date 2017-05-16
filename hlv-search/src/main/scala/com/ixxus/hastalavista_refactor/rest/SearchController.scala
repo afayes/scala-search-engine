@@ -31,16 +31,16 @@ class SearchController{
   def search(@RequestParam query:String):java.util.List[SearchResultItem] = {
     components.searchPagesByRelevance.search(query).asJava
   }
+}
 
-  class PageRequest() {
+class PageRequest() {
 
-    @BeanProperty
-    var url: String = _
+  @BeanProperty
+  var url: String = _
 
-    @BeanProperty
-    var content:String = _
+  @BeanProperty
+  var content:String = _
 
-    @BeanProperty
-    var creationDate:Date = _
-  }
+  @BeanProperty
+  var creationDate:Date = _
 }

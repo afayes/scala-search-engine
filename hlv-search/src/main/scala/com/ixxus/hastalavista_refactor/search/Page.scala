@@ -2,37 +2,21 @@ package com.ixxus.hastalavista_refactor.search
 
 import java.util.Date
 
-import scala.beans.BeanProperty
-
 /**
   * todo add comments.
   */
-  class Page() {
-
-    this: PageIndexComponent =>
-
-    @BeanProperty
-    var url: String = _
-
-    @BeanProperty
-    var content:String = _
-
-    @BeanProperty
-    var creationDate:Date = _
+  class Page(val url: String, val content:String, val creationDate:Date) {
+  this:PageIndexComponent =>
 
   def index() = pageIndex(url) = this
-  }
+}
 
 
 object Page {
 
-  def apply(url:String, content:String, creationDate:Date): Page = {
-    val p = new Page with PageIndexComponent {
+  def apply(url:String, content:String, creationDate:Date): Page with PageIndexComponent = {
+    new Page(url, content, creationDate) with PageIndexComponent {
       val pageIndex = new PageIndexUsingHashMap()
     }
-    p.url = url
-    p.content = content
-    p.creationDate = creationDate
-    p
   }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate
 
 import scala.collection.mutable
 import scala.concurrent.Future
-import scala.io.{BufferedSource, Source}
+import scala.io.{Source}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
@@ -30,7 +30,7 @@ class CrawlerServiceImpl extends CrawlerService {
 
   private var baseUrl: String = "https://en.wikipedia.org"
 
-  private var maxPages: Int = 200
+  private var maxPages: Int = 100
 
   @Value("${searchService.indexUrl}")
   private var searchServiceIndexUrl:String = _
