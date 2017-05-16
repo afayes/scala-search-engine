@@ -13,10 +13,12 @@ import scala.beans.BeanProperty
   */
 @RestController
 @RequestMapping(Array("/search"))
-class SearchController extends SearchPagesByRelevanceComponent with PageIndexComponent{
+class SearchController{
 
-  val searchPagesByRelevance: SearchPagesByRelevance = SearchPagesByRelevanceImpl()
-  val pageIndex: PageIndex = PageIndexImpl()
+  val components = new SearchPagesByRelevanceComponent with PageIndexComponent {
+    override val searchPagesByRelevance = SearchPagesByRelevanceImpl()
+    override val pageIndex:PageIndex = PageIndexImpl()
+  }
 
   @RequestMapping(value = Array("/index"), method=Array(RequestMethod.POST))
   @ResponseBody
@@ -27,7 +29,7 @@ class SearchController extends SearchPagesByRelevanceComponent with PageIndexCom
   @RequestMapping(method=Array(RequestMethod.GET))
   @ResponseBody
   def search(@RequestParam query:String):java.util.List[SearchResultItem] = {
-    searchPagesByRelevance.search(query).asJava
+    components.searchPagesByRelevance.search(query).asJava
   }
 
   class PageRequest() {
