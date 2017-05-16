@@ -13,22 +13,22 @@ trait PageIndexComponent {
 
   val pageIndex:PageIndex
 
-  class PageIndexImpl extends PageIndex {
+  class PageIndexUsingHashMap extends PageIndex {
 
     override def update(url: String, page: Page): Unit = {
-      PageIndexImpl.data = PageIndexImpl.data + (url -> page)
+      PageIndexUsingHashMap.data = PageIndexUsingHashMap.data + (url -> page)
     }
 
     override def apply(url: String): Option[Page] = {
-      PageIndexImpl.data.get(url)
+      PageIndexUsingHashMap.data.get(url)
     }
 
-    override def getAll(): Seq[Page] = PageIndexImpl.data.values.toSeq
+    override def getAll(): Seq[Page] = PageIndexUsingHashMap.data.values.toSeq
   }
 
-  object PageIndexImpl {
+  object PageIndexUsingHashMap {
     private var data = Map[String, Page]()
-    def apply():PageIndexImpl = new PageIndexImpl
+    def apply():PageIndexUsingHashMap = new PageIndexUsingHashMap
   }
 }
 

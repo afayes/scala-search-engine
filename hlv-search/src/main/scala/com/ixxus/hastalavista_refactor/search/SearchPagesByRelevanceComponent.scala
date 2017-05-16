@@ -19,7 +19,7 @@ trait SearchPagesByRelevanceComponent {
 
   val searchPagesByRelevance: SearchPagesByRelevance
 
-  class SearchPagesByRelevanceImpl extends SearchPagesByRelevance {
+  class SearchPagesByRelevanceUsingRegEx extends SearchPagesByRelevance {
 
     override def search(query: String): Seq[SearchResultItem] = {
 
@@ -66,8 +66,8 @@ trait SearchPagesByRelevanceComponent {
     }
   }
 
-  object SearchPagesByRelevanceImpl {
-    def apply():SearchPagesByRelevanceImpl = new SearchPagesByRelevanceImpl
+  object SearchPagesByRelevanceUsingRegEx {
+    def apply():SearchPagesByRelevanceUsingRegEx = new SearchPagesByRelevanceUsingRegEx
   }
 
 }

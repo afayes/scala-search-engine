@@ -16,8 +16,8 @@ import scala.beans.BeanProperty
 class SearchController{
 
   val components = new SearchPagesByRelevanceComponent with PageIndexComponent {
-    override val searchPagesByRelevance = SearchPagesByRelevanceImpl()
-    override val pageIndex:PageIndex = PageIndexImpl()
+    override val searchPagesByRelevance = SearchPagesByRelevanceUsingRegEx()
+    override val pageIndex:PageIndex = PageIndexUsingHashMap()
   }
 
   @RequestMapping(value = Array("/index"), method=Array(RequestMethod.POST))

@@ -28,7 +28,7 @@ object Page {
 
   def apply(url:String, content:String, creationDate:Date): Page = {
     val p = new Page with PageIndexComponent {
-      val pageIndex = new PageIndexImpl()
+      val pageIndex = new PageIndexUsingHashMap()
     }
     p.url = url
     p.content = content
