@@ -20,21 +20,24 @@ trait PageIndexComponent {
     private val logger = LoggerFactory.getLogger(classOf[PageIndexUsingHashMap])
 
     override def update(url: String, page: Page): Unit = {
-      PageIndexUsingHashMap.data = PageIndexUsingHashMap.data + (url -> page)
+      PageIndexData.data = PageIndexData.data + (url -> page)
       logger.debug(s"Added ${page.url} to index")
     }
 
     override def apply(url: String): Option[Page] = {
-      PageIndexUsingHashMap.data.get(url)
+      PageIndexData.data.get(url)
     }
 
-    override def getAll(): Seq[Page] = PageIndexUsingHashMap.data.values.toSeq
+    override def getAll(): Seq[Page] = PageIndexData.data.values.toSeq
   }
 
   object PageIndexUsingHashMap {
-    private var data = Map[String, Page]()
     def apply():PageIndexUsingHashMap = new PageIndexUsingHashMap
   }
+}
+
+object PageIndexData {
+  var data = Map[String, Page]()
 }
 
 
