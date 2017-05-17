@@ -26,28 +26,24 @@ trait AnalyticsServiceComponent {
         override def updateLastRetrievalDate(url: String, date: Date): Unit = {
             val existing = AnalyticsData.data.get(url)
             existing match {
-                case Some(existingItem) => {
+                case Some(existingItem) =>
                     val existingRetrievalDate = existingItem.lastRetrievalDate
-                    if (existingRetrievalDate == null) update(Analytics(url, date, 0))
-                    else {
-                        if (date.compareTo(existingRetrievalDate) > 0) update(Analytics(url, date, existingItem.clickCount))
-                    }
-                }
+                    if (existingRetrievalDate == null) update(Analytics(url, date, existingItem.clickCount))
+                    else if (date.compareTo(existingRetrievalDate) > 0) update(Analytics(url, date, existingItem.clickCount))
+
                 case None => update(Analytics(url, date, 0))
             }
         }
 
-        private def update(analytics: Analytics): Unit = {
-            AnalyticsData.data = AnalyticsData.data + (analytics.url -> analytics)
-        }
+        private def update(analytics: Analytics): Unit = AnalyticsData.data = AnalyticsData.data + (analytics.url -> analytics)
+
 
         override def updateClickCount(url: String): Unit = ???
 
         override def apply(url: String): Analytics = ???
 
-        override def getAll(): Seq[Analytics] = {
-            AnalyticsData.data.values.toSeq
-        }
+        override def getAll(): Seq[Analytics] = AnalyticsData.data.values.toSeq
+
     }
 
     object AnalyticServiceUsingHashMap {
