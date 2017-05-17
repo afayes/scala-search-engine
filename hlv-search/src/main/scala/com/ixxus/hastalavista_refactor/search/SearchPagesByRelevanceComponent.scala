@@ -1,5 +1,9 @@
 package com.ixxus.hastalavista_refactor.search
 
+import java.util.Date
+
+import com.ixxus.hastalavista_refactor.analytic.AnalyticsServiceComponent
+
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -11,7 +15,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 trait SearchPagesByRelevanceComponent {
 
-  this: PageIndexComponent =>
+  this: PageIndexComponent with AnalyticsServiceComponent =>
 
   trait SearchPagesByRelevance {
     def search(query:String):Seq[SearchResultItem]
@@ -33,6 +37,7 @@ trait SearchPagesByRelevanceComponent {
 
         val searchResults = searchResultsFuture.value.get.get
         val filtered =  searchResults.filter(s => s.matchCount > 0 || s.matchDistance < Int.MaxValue)
+        updateAnalytics(filtered)
         filtered
       }
 
@@ -65,6 +70,11 @@ trait SearchPagesByRelevanceComponent {
       Int.MaxValue
     }
   }
+
+    def updateAnalytics(filtered: Seq[SearchResultItem]) = {
+        val date = new Date
+        filtered.foreach(searchResultItem => Future {analyticsService.updateLastRetrievalDate(searchResultItem.url, date)})
+    }
 
   object SearchPagesByRelevanceUsingRegEx {
     def apply():SearchPagesByRelevanceUsingRegEx = new SearchPagesByRelevanceUsingRegEx
