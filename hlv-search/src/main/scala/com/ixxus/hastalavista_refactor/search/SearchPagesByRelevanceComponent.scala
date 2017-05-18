@@ -2,7 +2,7 @@ package com.ixxus.hastalavista_refactor.search
 
 import java.util.Date
 
-import com.ixxus.hastalavista_refactor.analytic.AnalyticsServiceComponent
+import com.ixxus.hastalavista_refactor.analytics.AnalyticsServiceComponent
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._

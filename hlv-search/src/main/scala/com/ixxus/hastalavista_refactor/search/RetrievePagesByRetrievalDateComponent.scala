@@ -1,6 +1,6 @@
 package com.ixxus.hastalavista_refactor.search
 
-import com.ixxus.hastalavista_refactor.analytic.AnalyticsServiceComponent
+import com.ixxus.hastalavista_refactor.analytics.AnalyticsServiceComponent
 
 /**
   * todo add comments.

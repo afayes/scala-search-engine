@@ -2,7 +2,7 @@ package com.ixxus.hastalavista_refactor.rest
 
 import java.util.Date
 
-import com.ixxus.hastalavista_refactor.analytic.AnalyticsServiceComponent
+import com.ixxus.hastalavista_refactor.analytics.AnalyticsServiceComponent
 import com.ixxus.hastalavista_refactor.config.Config
 import com.ixxus.hastalavista_refactor.search._
 import org.springframework.web.bind.annotation._
