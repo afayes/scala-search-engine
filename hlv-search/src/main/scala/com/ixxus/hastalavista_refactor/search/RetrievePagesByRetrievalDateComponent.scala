@@ -15,11 +15,10 @@ trait RetrievePagesByRetrievalDateComponent {
   val retrievePagesByRetrievalDate:RetrievePagesByRetrievalDate
 
   class RetrievePagesByRetrievalDateImpl extends RetrievePagesByRetrievalDate{
-    override def getPages(): Seq[SearchResultItem] = {
+    override def getPages(): Seq[SearchResultItem] =
       analyticsService.getAll().filter(_.lastRetrievalDate != null).sortWith((a1, a2) => {
         a1.lastRetrievalDate.compareTo(a2.lastRetrievalDate) > 0
       }).map(a => SearchResultItem(a.url, 0, 0, a.lastRetrievalDate, null))
-    }
   }
 
   object RetrievePagesByRetrievalDateImpl {

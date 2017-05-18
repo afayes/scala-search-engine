@@ -21,21 +21,16 @@ class SearchController {
 
     @RequestMapping(value = Array("/index"), method = Array(RequestMethod.POST))
     @ResponseBody
-    def index(@RequestBody page: PageRequest): Unit = {
-        Page(page.url, page.content, page.creationDate).index()
-    }
+    def index(@RequestBody page: PageRequest): Unit = Page(page.url, page.content, page.creationDate).index()
 
     @RequestMapping(method = Array(RequestMethod.GET))
     @ResponseBody
-    def search(@RequestParam query: String): java.util.List[SearchResultItem] = {
-        components.searchPagesByRelevance.search(query).asJava
-    }
+    def search(@RequestParam query: String): java.util.List[SearchResultItem] = components.searchPagesByRelevance.search(query).asJava
 
     @RequestMapping(value = Array("/byLastRetrievalDate"), method = Array(RequestMethod.GET))
     @ResponseBody
-    def search(): java.util.List[SearchResultItem] = {
-        components.retrievePagesByRetrievalDate.getPages().asJava
-    }
+    def search(): java.util.List[SearchResultItem] = components.retrievePagesByRetrievalDate.getPages().asJava
+
 }
 
 class PageRequest() {

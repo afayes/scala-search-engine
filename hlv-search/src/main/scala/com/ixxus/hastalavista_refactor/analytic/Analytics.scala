@@ -8,7 +8,5 @@ import java.util.Date
 class Analytics(val url:String, val lastRetrievalDate:Date, val clickCount:Int)
 
 object Analytics {
-  def apply(url:String, lastRetrievalDate:Date, clickCount:Int):Analytics = {
-    new Analytics(url, lastRetrievalDate, clickCount)
-  }
+  def apply(url:String, lastRetrievalDate:Date, clickCount:Int):Analytics = new Analytics(url, lastRetrievalDate, clickCount)
 }

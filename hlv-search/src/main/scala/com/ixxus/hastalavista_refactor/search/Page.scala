@@ -14,9 +14,8 @@ import java.util.Date
 
 object Page {
 
-  def apply(url:String, content:String, creationDate:Date): Page with PageIndexComponent = {
+  def apply(url:String, content:String, creationDate:Date): Page with PageIndexComponent =
     new Page(url, content, creationDate) with PageIndexComponent {
       val pageIndex = new PageIndexUsingHashMap()
     }
-  }
 }

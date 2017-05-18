@@ -18,9 +18,7 @@ class SearchApplication
 
 object SearchApplication  {
 
-    def main(args: Array[String]): Unit = {
-        SpringApplication.run(classOf[SearchApplication])
-    }
+    def main(args: Array[String]): Unit = SpringApplication.run(classOf[SearchApplication])
 
     @Bean
     def submissionApi: Docket = submissionApi("com.ixxus.hastalavista_refactor", "Search", "Search api")

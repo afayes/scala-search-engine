@@ -24,9 +24,7 @@ class PageIndexUsingHashMap extends PageIndex {
     logger.debug(s"Added ${page.url} to index")
   }
 
-  override def apply(url: String): Option[Page] = {
-    PageIndexUsingHashMap.data.get(url)
-  }
+  override def apply(url: String): Option[Page] = PageIndexUsingHashMap.data.get(url)
 
   override def getAll(): Seq[Page] = PageIndexUsingHashMap.data.values.toSeq
 }
