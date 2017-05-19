@@ -9,75 +9,63 @@ import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-
 /**
   * todo add comments.
   */
 trait SearchPagesByRelevanceComponent {
 
-  this: PageIndexComponent with AnalyticsServiceComponent =>
+    this: PageIndexComponent with AnalyticsServiceComponent =>
 
-  trait SearchPagesByRelevance {
-    def search(query:String):Seq[SearchResultItem]
-  }
-
-  val searchPagesByRelevance: SearchPagesByRelevance
-
-  class SearchPagesByRelevanceUsingRegEx extends SearchPagesByRelevance {
-
-    override def search(query: String): Seq[SearchResultItem] = {
-
-      val searchResultsRetrievalFunc = (pages:Seq[Page]) => {
-        val searchResultsFuture = Future.traverse(pages)(p => Future{
-          val (matchCount, matchDistance) = getRelevancy(p, query)
-          SearchResultItem(p.url, matchCount, matchDistance, null, null)
-        })
-
-        Await.result(searchResultsFuture, 10.seconds)
-
-        val searchResults = searchResultsFuture.value.get.get
-        val filtered =  searchResults.filter(s => s.matchCount > 0 || s.matchDistance < Int.MaxValue)
-        updateAnalytics(filtered)
-        filtered
-      }
-
-      val sortFunc = (s1:SearchResultItem, s2:SearchResultItem) => {
-        if (s1.matchCount > s2.matchCount) true
-        else if (s1.matchCount < s2.matchCount) false
-        else s1.matchDistance > s2.matchDistance
-      }
-
-      search(searchResultsRetrievalFunc, sortFunc)
+    trait SearchPagesByRelevance {
+        def search(query: String): Future[Seq[SearchResultItem]]
     }
 
-    private def search(searchResultsRetrievalFunc:(Seq[Page] => Seq[SearchResultItem]),
-                       sortFunc:(SearchResultItem, SearchResultItem) => Boolean): Seq[SearchResultItem] = {
+    val searchPagesByRelevance: SearchPagesByRelevance
 
-      val pages = pageIndex.getAll()
-      val searchResults = searchResultsRetrievalFunc(pages);
-      searchResults.toList.sortWith(sortFunc)
+    class SearchPagesByRelevanceUsingRegEx extends SearchPagesByRelevance {
+
+        override def search(query: String): Future[Seq[SearchResultItem]] = {
+            val pages = pageIndex.getAll()
+
+            val searchResultsFuture = Future
+                .traverse(pages)(p => Future {
+                    val (matchCount, matchDistance) = getRelevancy(p, query)
+                    SearchResultItem(p.url, matchCount, matchDistance, null, null)
+                })
+
+            searchResultsFuture
+                .flatMap(searchResults => Future {
+                val filtered = searchResults.filter(resultItem => resultItem.matchCount > 0 || resultItem.matchDistance < Int.MaxValue)
+                updateAnalytics(filtered)
+                filtered.sortWith((resultItem1: SearchResultItem, resultItem2: SearchResultItem) => {
+                    if (resultItem1.matchCount > resultItem2.matchCount) true
+                    else if (resultItem1.matchCount < resultItem2.matchCount) false
+                    else resultItem1.matchDistance > resultItem2.matchDistance
+                })
+            })
+        }
+
+        private def getRelevancy(page: Page, query: String): (Int, Int) = {
+            val pattern = query.r
+            val matchCount = pattern.findAllMatchIn(page.content).size
+            val matchDistance = if (matchCount == 0) getMatchDistance(query, page.content) else Int.MaxValue
+            (matchCount, matchDistance)
+        }
+
+        private def getMatchDistance(query: String, content: String): Int = {
+            // todo implelment
+            Int.MaxValue
+        }
+
+        def updateAnalytics(filtered: Seq[SearchResultItem]) = {
+            val date = new Date
+            filtered.foreach(searchResultItem => Future {
+                analyticsService.updateLastRetrievalDate(searchResultItem.url, date)
+            })
+        }
     }
 
-    private def getRelevancy(page:Page, query:String):(Int, Int) = {
-      val pattern = query.r
-      val matchCount = pattern.findAllMatchIn(page.content).size
-      val matchDistance = if (matchCount == 0) getMatchDistance(query, page.content) else Int.MaxValue
-      (matchCount, matchDistance)
+    object SearchPagesByRelevanceUsingRegEx {
+        def apply(): SearchPagesByRelevanceUsingRegEx = new SearchPagesByRelevanceUsingRegEx
     }
-
-    private def getMatchDistance(query: String, content: String):Int = {
-      // todo implelment
-      Int.MaxValue
-    }
-  }
-
-    def updateAnalytics(filtered: Seq[SearchResultItem]) = {
-        val date = new Date
-        filtered.foreach(searchResultItem => Future {analyticsService.updateLastRetrievalDate(searchResultItem.url, date)})
-    }
-
-  object SearchPagesByRelevanceUsingRegEx {
-    def apply():SearchPagesByRelevanceUsingRegEx = new SearchPagesByRelevanceUsingRegEx
-  }
-
 }

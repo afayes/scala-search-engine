@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation._
 
 import scala.collection.JavaConverters._
 import scala.beans.BeanProperty
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 /**
   * todo add comments.
@@ -23,7 +25,11 @@ class SearchController {
 
     @RequestMapping(method = Array(RequestMethod.GET))
     @ResponseBody
-    def search(@RequestParam query: String): java.util.List[SearchResultItem] = components.searchPagesByRelevance.search(query).asJava
+    def search(@RequestParam query: String): java.util.List[SearchResultItem] = {
+       val searchResults = components.searchPagesByRelevance.search(query)
+        Await.result(searchResults, 10.seconds)
+        searchResults.value.get.get.asJava
+    }
 
     @RequestMapping(value = Array("/byLastRetrievalDate"), method = Array(RequestMethod.GET))
     @ResponseBody
