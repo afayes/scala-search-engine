@@ -1,4 +1,4 @@
-package com.ixxus.hastalavista.search
+package com.ixxus.hastalavista
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -18,12 +18,10 @@ class SearchApplication
 
 object SearchApplication  {
 
-    def main(args: Array[String]): Unit = {
-        SpringApplication.run(classOf[SearchApplication])
-    }
+    def main(args: Array[String]) { SpringApplication.run(classOf[SearchApplication]) }
 
     @Bean
-    def submissionApi: Docket = submissionApi("com.ixxus.hastalavista.search", "Search", "Search api")
+    def submissionApi: Docket = submissionApi("com.ixxus.hastalavista_refactor", "Search", "Search api")
 
     def submissionApi(packageName: String, title: String, description: String): Docket = {
         val apiInfo: ApiInfo = new ApiInfoBuilder().title(title).description(description).build

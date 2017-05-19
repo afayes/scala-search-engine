@@ -1,8 +1,8 @@
-package com.ixxus.hastalavista_refactor.search
+package com.ixxus.hastalavista.search
 
 import java.util.Date
 
-import com.ixxus.hastalavista_refactor.analytics.AnalyticsServiceComponent
+import com.ixxus.hastalavista.analytics.AnalyticsServiceComponent
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._

@@ -1,4 +1,4 @@
-package com.ixxus.hastalavista_refactor.analytics
+package com.ixxus.hastalavista.analytics
 
 import java.util.Date
 

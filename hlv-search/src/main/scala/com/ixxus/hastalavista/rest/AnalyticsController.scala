@@ -1,7 +1,7 @@
-package com.ixxus.hastalavista_refactor.rest
+package com.ixxus.hastalavista.rest
 
-import com.ixxus.hastalavista_refactor.analytics.Analytics
-import com.ixxus.hastalavista_refactor.config.Config
+import com.ixxus.hastalavista.analytics.Analytics
+import com.ixxus.hastalavista.config.Config
 import org.springframework.web.bind.annotation._
 
 import scala.collection.JavaConverters._
@@ -16,7 +16,6 @@ class AnalyticsController {
     val components = Config.components
 
     @RequestMapping(value = Array("/click"), method = Array(RequestMethod.POST))
-    @ResponseBody
     def click(@RequestParam url: String) {
         components.analyticsService.updateClickCount(url)
     }

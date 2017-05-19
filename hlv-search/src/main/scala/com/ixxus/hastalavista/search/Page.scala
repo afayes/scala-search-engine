@@ -1,4 +1,4 @@
-package com.ixxus.hastalavista_refactor.search
+package com.ixxus.hastalavista.search
 
 import java.util.Date
 

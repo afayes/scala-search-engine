@@ -1,4 +1,4 @@
-package com.ixxus.hastalavista_refactor.search
+package com.ixxus.hastalavista.search
 
 import org.slf4j.LoggerFactory
 
@@ -19,7 +19,7 @@ class PageIndexUsingHashMap extends PageIndex {
 
   private val logger = LoggerFactory.getLogger(classOf[PageIndexUsingHashMap])
 
-  override def update(url: String, page: Page): Unit = {
+  override def update(url: String, page: Page) {
     PageIndexUsingHashMap.data = PageIndexUsingHashMap.data + (url -> page)
     logger.debug(s"Added ${page.url} to index")
   }

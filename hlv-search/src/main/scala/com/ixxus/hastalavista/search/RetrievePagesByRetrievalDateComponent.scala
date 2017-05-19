@@ -1,6 +1,6 @@
-package com.ixxus.hastalavista_refactor.search
+package com.ixxus.hastalavista.search
 
-import com.ixxus.hastalavista_refactor.analytics.AnalyticsServiceComponent
+import com.ixxus.hastalavista.analytics.AnalyticsServiceComponent
 
 /**
   * todo add comments.
@@ -14,7 +14,8 @@ trait RetrievePagesByRetrievalDateComponent {
 
   val retrievePagesByRetrievalDate:RetrievePagesByRetrievalDate
 
-  class RetrievePagesByRetrievalDateImpl extends RetrievePagesByRetrievalDate{
+  class RetrievePagesByRetrievalDateImpl extends RetrievePagesByRetrievalDate {
+
     override def getPages(): Seq[SearchResultItem] =
       analyticsService.getAll().filter(_.lastRetrievalDate != null).sortWith((a1, a2) => {
         a1.lastRetrievalDate.compareTo(a2.lastRetrievalDate) > 0
