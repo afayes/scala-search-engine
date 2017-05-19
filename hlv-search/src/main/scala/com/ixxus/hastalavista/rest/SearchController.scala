@@ -19,7 +19,7 @@ class SearchController {
     val components = Config.components
 
     @RequestMapping(value = Array("/index"), method = Array(RequestMethod.POST))
-    def index(@RequestBody page: PageRequest) { Page(page.url, page.content, page.creationDate).index() }
+    def index(@RequestBody page: PageRequest) { components.pageIndex.update(page.url, Page(page.url, page.content, page.creationDate)) }
 
     @RequestMapping(method = Array(RequestMethod.GET))
     @ResponseBody
