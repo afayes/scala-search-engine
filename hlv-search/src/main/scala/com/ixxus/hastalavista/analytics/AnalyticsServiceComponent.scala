@@ -1,8 +1,8 @@
 package com.ixxus.hastalavista.analytics
 
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.{Date, Timer, TimerTask}
-import java.util.concurrent.{ArrayBlockingQueue, BlockingQueue, LinkedBlockingQueue, TimeUnit}
+import java.util.{Date}
+import java.util.concurrent.{BlockingQueue, TimeUnit}
 
 import com.ixxus.hastalavista.search.PageIndexComponent
 import org.slf4j.LoggerFactory
@@ -27,10 +27,9 @@ trait AnalyticsServiceComponent {
         def getAll(): Seq[Analytics]
     }
 
+    // todo can make this an object to use single queue
     class AnalyticServiceUsingHashMap private(private var data: Map[String, Analytics], private var clickCountQueue:BlockingQueue[String]) extends AnalyticsService {
-
-        private val logger = LoggerFactory.getLogger(classOf[AnalyticServiceUsingHashMap])
-
+        import AnalyticServiceUsingHashMap._
         val stopPolling = new AtomicBoolean(false)
 
         import scala.concurrent.ExecutionContext.Implicits.global
@@ -39,7 +38,7 @@ trait AnalyticsServiceComponent {
             while (stopPolling.get() == false) {
                 val clickUrl = clickCountQueue.poll(1000, TimeUnit.MILLISECONDS)
                 if (clickUrl != null) {
-                    updateClickCountImpl(clickUrl)
+                    consumeClickCountFromQueue(clickUrl)
                 }
             }
         })
@@ -48,6 +47,7 @@ trait AnalyticsServiceComponent {
             val existing = data.get(url)
             existing match {
                 case Some(existingItem) =>
+                    // todo can wrap date  inside option
                     val existingRetrievalDate = existingItem.lastRetrievalDate
                     if (existingRetrievalDate == null) update(Analytics(url, date, existingItem.clickCount))
                     else if (date.compareTo(existingRetrievalDate) > 0) update(Analytics(url, date, existingItem.clickCount))
@@ -56,11 +56,9 @@ trait AnalyticsServiceComponent {
             }
         }
 
-        private def update(analytics: Analytics) {
-            data += analytics.url -> analytics
-        }
+        private def update(analytics: Analytics) { data += analytics.url -> analytics }
 
-
+        // todo can pass in page index if make whole class an object
         override def updateClickCount(url:String) {
            val pageOption = pageIndex(url)
             pageOption match {
@@ -71,7 +69,7 @@ trait AnalyticsServiceComponent {
             }
         }
 
-        private def updateClickCountImpl(url:String) {
+        private def consumeClickCountFromQueue(url:String) {
             val existing = data.get(url)
             existing match {
                 case Some(existingItem) =>
@@ -89,6 +87,7 @@ trait AnalyticsServiceComponent {
     }
 
     object AnalyticServiceUsingHashMap {
+        private val logger = LoggerFactory.getLogger(classOf[AnalyticServiceUsingHashMap])
         def apply(data: Map[String, Analytics], clickCountQueue:BlockingQueue[String]): AnalyticServiceUsingHashMap = new AnalyticServiceUsingHashMap(data, clickCountQueue)
     }
 }
