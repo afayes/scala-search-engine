@@ -42,7 +42,7 @@ object CrawlerService extends App {
     }
 
     private def crawl(url: String, baseUrl: String, urls: mutable.Set[String], startTime: Long = System.nanoTime()): Unit = {
-        Future {
+        //Future {
             if (urls.size < maxPages && !urls.contains(url)) {
                 logger.debug("crawling {} - currently crawled {} urls", url, urls.size)
                 val source = Try(Source.fromURL(url, enc))
@@ -73,7 +73,7 @@ object CrawlerService extends App {
                 val duration: Double = (endTime - startTime) / 1000000000.asInstanceOf[Double]
                 println(s"Crawled ${urls.size} urls in $duration seconds")
             }
-        }
+        //}
     }
 
     def indexPage(url: String, html: String) {

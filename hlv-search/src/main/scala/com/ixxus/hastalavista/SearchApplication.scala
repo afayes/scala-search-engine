@@ -21,7 +21,7 @@ object SearchApplication  {
     def main(args: Array[String]) { SpringApplication.run(classOf[SearchApplication]) }
 
     @Bean
-    def submissionApi: Docket = submissionApi("com.ixxus.hastalavista_refactor", "Search", "Search api")
+    def submissionApi: Docket = submissionApi("com.ixxus.hastalavista", "Search", "Search api")
 
     def submissionApi(packageName: String, title: String, description: String): Docket = {
         val apiInfo: ApiInfo = new ApiInfoBuilder().title(title).description(description).build
